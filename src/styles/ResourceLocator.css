@@ -1,0 +1,111 @@
+.resource-locator-page {
+  background-color: #0a0a0a;
+  min-height: 100vh;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.locator-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Locator Hero Section */
+.locator-hero {
+  margin-bottom: 3rem;
+}
+
+.locator-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #4169e1;
+}
+
+.locator-subtitle {
+  font-size: 1rem;
+  color: #a0a0a0;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+/* Search Form */
+.locator-search-form {
+  display: flex;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.25rem 0 0 0.25rem;
+  color: white;
+  font-size: 1rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4169e1;
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #4169e1;
+  border: none;
+  border-radius: 0 0.25rem 0.25rem 0;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.search-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Popular Books Section */
+.popular-books-section {
+  margin-top: 4rem;
+}
+
+.popular-books-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.popular-books-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.popular-book-item {
+  background-color: #1a1a1a;
+  border-radius: 2rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popular-book-item:hover {
+  background-color: #252525;
+}

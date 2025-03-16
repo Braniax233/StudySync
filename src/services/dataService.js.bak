@@ -1,0 +1,321 @@
+/**
+ * Data Service for StudySync
+ * Handles data persistence using localStorage
+ */
+
+// Constants for localStorage keys
+const STORAGE_KEYS = {
+  NOTES: 'studysync_notes',
+  EVENTS: 'studysync_events',
+  RESOURCES: 'studysync_resources',
+  BOOKMARKS: 'studysync_bookmarks',
+  USER_PREFERENCES: 'studysync_user_preferences'
+};
+
+// Sample data for initial setup
+const SAMPLE_DATA = {
+  notes: [
+    {
+      id: '1',
+      title: 'Machine Learning Fundamentals',
+      content: '# Machine Learning Fundamentals\n\n## Supervised Learning\n- Classification\n- Regression\n\n## Unsupervised Learning\n- Clustering\n- Dimensionality Reduction\n\n## Key Algorithms\n- Linear Regression\n- Decision Trees\n- Neural Networks',
+      tags: ['ML', 'AI', 'Computer Science'],
+      isShared: true,
+      dateCreated: new Date(2025, 2, 1).toISOString(),
+      dateModified: new Date(2025, 2, 3).toISOString()
+    },
+    {
+      id: '2',
+      title: 'React Hooks Cheatsheet',
+      content: '# React Hooks Cheatsheet\n\n## useState\n```jsx\nconst [state, setState] = useState(initialValue);\n```\n\n## useEffect\n```jsx\nuseEffect(() => {\n  // Side effects here\n  return () => {\n    // Cleanup function\n  };\n}, [dependencies]);\n```\n\n## useContext\n```jsx\nconst value = useContext(MyContext);\n```',
+      tags: ['React', 'JavaScript', 'Web Development'],
+      isShared: false,
+      dateCreated: new Date(2025, 1, 15).toISOString(),
+      dateModified: new Date(2025, 1, 20).toISOString()
+    },
+    {
+      id: '3',
+      title: 'Study Plan for Final Exams',
+      content: '# Study Plan for Final Exams\n\n## Week 1\n- Review lecture notes\n- Complete practice problems\n\n## Week 2\n- Focus on difficult topics\n- Form study group\n\n## Week 3\n- Mock exams\n- Final review',
+      tags: ['Study', 'Planning'],
+      isShared: false,
+      dateCreated: new Date(2025, 2, 2).toISOString(),
+      dateModified: new Date(2025, 2, 2).toISOString()
+    }
+  ],
+  events: [
+    { 
+      id: '1',
+      title: 'Study Session: Machine Learning',
+      date: new Date(2025, 2, 5).toISOString(),
+      startTime: '14:00',
+      endTime: '16:00',
+      location: 'Library - Room 204',
+      description: 'Group study session focusing on neural networks and deep learning concepts.'
+    },
+    { 
+      id: '2',
+      title: 'Project Meeting',
+      date: new Date(2025, 2, 7).toISOString(),
+      startTime: '10:00',
+      endTime: '11:30',
+      location: 'Online - Zoom',
+      description: 'Weekly team meeting to discuss project progress and next steps.'
+    },
+    { 
+      id: '3',
+      title: 'Database Exam',
+      date: new Date(2025, 2, 10).toISOString(),
+      startTime: '09:00',
+      endTime: '11:00',
+      location: 'Main Hall',
+      description: 'Final exam covering SQL, NoSQL, and database design principles.'
+    }
+  ],
+  resources: [
+    {
+      id: '1',
+      title: 'Introduction to Machine Learning',
+      type: 'course',
+      url: 'https://www.coursera.org/learn/machine-learning',
+      description: 'Comprehensive course covering machine learning fundamentals',
+      tags: ['ML', 'AI', 'Beginner']
+    },
+    {
+      id: '2',
+      title: 'React Documentation',
+      type: 'documentation',
+      url: 'https://reactjs.org/docs/getting-started.html',
+      description: 'Official React documentation',
+      tags: ['React', 'JavaScript', 'Web Development']
+    },
+    {
+      id: '3',
+      title: 'Effective Study Techniques',
+      type: 'article',
+      url: 'https://www.example.com/study-techniques',
+      description: 'Research-based study methods for better retention',
+      tags: ['Study', 'Learning', 'Productivity']
+    }
+  ],
+  bookmarks: [
+    {
+      id: '1',
+      title: 'Advanced Machine Learning Algorithms',
+      url: 'https://www.example.com/advanced-ml',
+      category: 'Article',
+      dateAdded: new Date(2025, 2, 1).toISOString()
+    },
+    {
+      id: '2',
+      title: 'React Performance Optimization',
+      url: 'https://www.example.com/react-performance',
+      category: 'Video',
+      dateAdded: new Date(2025, 1, 28).toISOString()
+    },
+    {
+      id: '3',
+      title: 'Database Design Patterns',
+      url: 'https://www.example.com/db-patterns',
+      category: 'Book',
+      dateAdded: new Date(2025, 1, 20).toISOString()
+    }
+  ]
+};
+
+// Helper function to initialize data if it doesn't exist
+const initializeData = (key, sampleData) => {
+  if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, JSON.stringify(sampleData));
+  }
+};
+
+// Notes Service
+export const notesService = {
+  getNotes: () => {
+    initializeData(STORAGE_KEYS.NOTES, SAMPLE_DATA.notes);
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES));
+  },
+  
+  getNote: (id) => {
+    const notes = notesService.getNotes();
+    return notes.find(note => note.id === id);
+  },
+  
+  createNote: (note) => {
+    const notes = notesService.getNotes();
+    const newNote = {
+      ...note,
+      id: Date.now().toString(),
+      dateCreated: new Date().toISOString(),
+      dateModified: new Date().toISOString()
+    };
+    
+    const updatedNotes = [...notes, newNote];
+    localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(updatedNotes));
+    
+    return newNote;
+  },
+  
+  updateNote: (updatedNote) => {
+    const notes = notesService.getNotes();
+    const updatedNotes = notes.map(note => 
+      note.id === updatedNote.id 
+        ? { ...updatedNote, dateModified: new Date().toISOString() } 
+        : note
+    );
+    
+    localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(updatedNotes));
+    return updatedNote;
+  },
+  
+  deleteNote: (id) => {
+    const notes = notesService.getNotes();
+    const updatedNotes = notes.filter(note => note.id !== id);
+    localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(updatedNotes));
+  },
+  
+  shareNote: (id) => {
+    const notes = notesService.getNotes();
+    const updatedNotes = notes.map(note => 
+      note.id === id 
+        ? { ...note, isShared: !note.isShared, dateModified: new Date().toISOString() } 
+        : note
+    );
+    
+    localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(updatedNotes));
+    return updatedNotes.find(note => note.id === id);
+  }
+};
+
+// Events Service
+export const eventsService = {
+  getEvents: () => {
+    initializeData(STORAGE_KEYS.EVENTS, SAMPLE_DATA.events);
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.EVENTS));
+  },
+  
+  getEvent: (id) => {
+    const events = eventsService.getEvents();
+    return events.find(event => event.id === id);
+  },
+  
+  getEventsByDate: (date) => {
+    const events = eventsService.getEvents();
+    const targetDate = new Date(date);
+    
+    // Compare only the date part (year, month, day)
+    return events.filter(event => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getFullYear() === targetDate.getFullYear() &&
+        eventDate.getMonth() === targetDate.getMonth() &&
+        eventDate.getDate() === targetDate.getDate()
+      );
+    });
+  },
+  
+  createEvent: (event) => {
+    const events = eventsService.getEvents();
+    const newEvent = {
+      ...event,
+      id: Date.now().toString()
+    };
+    
+    const updatedEvents = [...events, newEvent];
+    localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(updatedEvents));
+    
+    return newEvent;
+  },
+  
+  updateEvent: (updatedEvent) => {
+    const events = eventsService.getEvents();
+    const updatedEvents = events.map(event => 
+      event.id === updatedEvent.id ? updatedEvent : event
+    );
+    
+    localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(updatedEvents));
+  },
+  
+  deleteEvent: (id) => {
+    const events = eventsService.getEvents();
+    const updatedEvents = events.filter(event => event.id !== id);
+    localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(updatedEvents));
+  }
+};
+
+// Resources Service
+export const resourcesService = {
+  getResources: () => {
+    initializeData(STORAGE_KEYS.RESOURCES, SAMPLE_DATA.resources);
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.RESOURCES));
+  },
+  
+  addResource: (resource) => {
+    const resources = resourcesService.getResources();
+    const newResource = {
+      ...resource,
+      id: Date.now().toString(),
+      dateAdded: new Date().toISOString()
+    };
+    
+    const updatedResources = [...resources, newResource];
+    localStorage.setItem(STORAGE_KEYS.RESOURCES, JSON.stringify(updatedResources));
+    
+    return newResource;
+  }
+};
+
+// Bookmarks Service
+export const bookmarksService = {
+  getBookmarks: () => {
+    initializeData(STORAGE_KEYS.BOOKMARKS, SAMPLE_DATA.bookmarks);
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.BOOKMARKS));
+  },
+  
+  addBookmark: (bookmark) => {
+    const bookmarks = bookmarksService.getBookmarks();
+    const newBookmark = {
+      ...bookmark,
+      id: Date.now().toString(),
+      dateAdded: new Date().toISOString()
+    };
+    
+    const updatedBookmarks = [...bookmarks, newBookmark];
+    localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(updatedBookmarks));
+    
+    return newBookmark;
+  },
+  
+  deleteBookmark: (id) => {
+    const bookmarks = bookmarksService.getBookmarks();
+    const updatedBookmarks = bookmarks.filter(bookmark => bookmark.id !== id);
+    localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(updatedBookmarks));
+  }
+};
+
+// User Preferences Service
+export const userPreferencesService = {
+  getPreferences: () => {
+    const defaultPreferences = {
+      theme: 'dark',
+      notifications: true,
+      language: 'en',
+      fontSize: 'medium',
+      dashboardLayout: 'grid'
+    };
+    
+    if (!localStorage.getItem(STORAGE_KEYS.USER_PREFERENCES)) {
+      localStorage.setItem(STORAGE_KEYS.USER_PREFERENCES, JSON.stringify(defaultPreferences));
+    }
+    
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.USER_PREFERENCES));
+  },
+  
+  updatePreferences: (preferences) => {
+    const currentPreferences = userPreferencesService.getPreferences();
+    const updatedPreferences = { ...currentPreferences, ...preferences };
+    localStorage.setItem(STORAGE_KEYS.USER_PREFERENCES, JSON.stringify(updatedPreferences));
+    return updatedPreferences;
+  }
+};
