@@ -12,6 +12,7 @@ import BookmarksPage from "./pages/BookmarksPage";
 import NotesPage from "./pages/NotesPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
+import RecentActivityPage from "./pages/RecentActivityPage";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import Footer from "./components/Footer";
 import "./styles/App.css"; 
@@ -75,6 +76,13 @@ function App() {
               <ProtectedRoute>
                 <div className="content-container">
                   <SettingsPage />
+                </div>
+              </ProtectedRoute>
+            } />
+            <Route path="/activity" element={
+              <ProtectedRoute>
+                <div className="content-container">
+                  <RecentActivityPage />
                 </div>
               </ProtectedRoute>
             } />

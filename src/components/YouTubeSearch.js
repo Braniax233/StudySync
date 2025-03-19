@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from '../utils/axiosConfig';
+import { youtubeSearchCache } from '../services/cacheService';
 import '../styles/YouTubeSearch.css';
 
 const YouTubeSearch = () => {
@@ -17,11 +18,28 @@ const YouTubeSearch = () => {
 
     setLoading(true);
     setError('');
+    
     try {
+      // Check cache first
+      const cachedResults = youtubeSearchCache.get(query);
+      
+      if (cachedResults) {
+        // Use cached results
+        setVideos(cachedResults);
+        setLoading(false);
+        return;
+      }
+      
+      // If not in cache, make API request
       console.log('Sending request to:', `/api/youtube/search?query=${encodeURIComponent(query)}`);
       const response = await axios.get(`/api/youtube/search?query=${encodeURIComponent(query)}`);
       console.log('Response received:', response);
-      setVideos(response.data.data);
+      
+      const videoResults = response.data.data;
+      setVideos(videoResults);
+      
+      // Cache the results
+      youtubeSearchCache.set(query, videoResults);
     } catch (error) {
       console.error('Search error details:', {
         message: error.message,
@@ -33,6 +51,14 @@ const YouTubeSearch = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleVideoClick = (video) => {
+    // Add to recent activity when a video is clicked
+    youtubeSearchCache.addToRecent(video);
+    
+    // Open the video in a new tab
+    window.open(video.url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -59,18 +85,21 @@ const YouTubeSearch = () => {
       <div className="video-grid">
         {videos.map((video) => (
           <div key={video.id} className="video-card">
-            <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
+            <img 
+              src={video.thumbnail} 
+              alt={video.title} 
+              className="video-thumbnail" 
+              onClick={() => handleVideoClick(video)}
+            />
             <div className="video-info">
               <h3 className="video-title">{video.title}</h3>
               <p className="video-description">{video.description}</p>
-              <a
-                href={video.url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => handleVideoClick(video)}
                 className="watch-button"
               >
                 Watch on YouTube
-              </a>
+              </button>
             </div>
           </div>
         ))}

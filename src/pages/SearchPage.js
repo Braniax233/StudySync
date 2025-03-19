@@ -1,27 +1,12 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navigation/Navbar';
 import YouTubeSearch from '../components/YouTubeSearch';
+import BooksSearch from '../components/BooksSearch';
 import '../styles/SearchPage.css';
 
 const SearchPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState('youtube');
   
-  // Sample popular search topics
-  const popularTopics = [
-    "Machine Learning for beginners",
-    "Web Development fundamentals",
-    "Data Structures and Algorithms",
-    "Calculus tutorial",
-    "Python programming"
-  ];
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // In a real app, this would search for resources
-    console.log(`Searching for: ${searchQuery}`);
-  };
-
   return (
     <div className="search-page">
       <Navbar />
@@ -37,49 +22,24 @@ const SearchPage = () => {
         <div className="tabs-container">
           <div className="tabs">
             <button 
-              className={`tab ${activeTab === 'general' ? 'active' : ''}`}
-              onClick={() => setActiveTab('general')}
-            >
-              General Search
-            </button>
-            <button 
               className={`tab ${activeTab === 'youtube' ? 'active' : ''}`}
               onClick={() => setActiveTab('youtube')}
             >
               YouTube Videos
             </button>
+            <button 
+              className={`tab ${activeTab === 'books' ? 'active' : ''}`}
+              onClick={() => setActiveTab('books')}
+            >
+              Educational Books
+            </button>
           </div>
 
           <div className="tab-content">
-            {activeTab === 'general' ? (
-              <>
-                <form onSubmit={handleSearch} className="search-form">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="What would you like to learn today? (e.g., 'Machine Learning for beginners')"
-                    className="search-input"
-                  />
-                  <button type="submit" className="search-button">
-                    <i className="search-icon"></i>
-                    Search
-                  </button>
-                </form>
-                
-                <div className="popular-topics-section">
-                  <h2>Popular Search Topics</h2>
-                  <div className="popular-topics-list">
-                    {popularTopics.map((topic, index) => (
-                      <div key={index} className="popular-topic-item">
-                        {topic}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            ) : (
+            {activeTab === 'youtube' ? (
               <YouTubeSearch />
+            ) : (
+              <BooksSearch />
             )}
           </div>
         </div>

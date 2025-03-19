@@ -11,6 +11,7 @@ const eventRoutes = require('./routes/eventRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const youtubeRoutes = require('./routes/youtubeRoutes');
+const googleBooksRoutes = require('./routes/googleBooksRoutes');
 
 // Initialize Express app
 const app = express();
@@ -44,6 +45,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/youtube', youtubeRoutes);
+app.use('/api/books', googleBooksRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -2,28 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navigation/Navbar';
 import StudySyncCalendar from '../components/Calendar/Calendar';
-import { resourcesService, bookmarksService } from '../services/dataService';
+import { bookmarksService } from '../services/dataService';
+import { recentActivityService } from '../services/cacheService';
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [resources, setResources] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
   
   // Load data from services
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Load resources
-        const loadedResources = await resourcesService.getResources();
-        if (Array.isArray(loadedResources)) {
-          setResources(loadedResources);
-        } else {
-          console.error('Resources data is not an array:', loadedResources);
-          setResources([]);
-        }
-        
         // Load bookmarks
         const loadedBookmarks = await bookmarksService.getBookmarks();
         if (Array.isArray(loadedBookmarks)) {
@@ -32,9 +24,12 @@ const Dashboard = () => {
           console.error('Bookmarks data is not an array:', loadedBookmarks);
           setBookmarks([]);
         }
+        
+        // Load recent activity from cache
+        const activities = recentActivityService.getActivities(5);
+        setRecentActivity(activities);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
-        setResources([]);
         setBookmarks([]);
       }
     };
@@ -93,6 +88,25 @@ const Dashboard = () => {
     });
   };
 
+  // Format relative time for recent activity
+  const getRelativeTime = (timestamp) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    
+    // Convert to appropriate units
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    if (minutes < 1) return 'just now';
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    if (days < 30) return `${days} day${days !== 1 ? 's' : ''} ago`;
+    
+    // Fall back to formatted date for older items
+    return formatDate(new Date(timestamp));
+  };
+
   return (
     <div className="dashboard-page">
       <Navbar />
@@ -104,27 +118,40 @@ const Dashboard = () => {
           <div className="dashboard-card recent-activity">
             <div className="card-header">
               <h2>Recent Activity</h2>
-              <button className="view-all-button" onClick={() => handleNavigate('/locate')}>View All</button>
+              <button className="view-all-button" onClick={() => handleNavigate('/activity')}>View All</button>
             </div>
             <div className="card-content">
-              <ul className="activity-list">
-                {resources.map(resource => (
-                  <li key={resource.id} className="activity-item" onClick={() => handleOpenResource(resource.url)}>
-                    <div className="activity-icon">
-                      {resource.type === 'YouTube Course' && <div className="resource-icon youtube"></div>}
-                      {resource.type === 'PDF' && <div className="resource-icon pdf"></div>}
-                      {resource.type === 'Online Course' && <div className="resource-icon course"></div>}
-                    </div>
-                    <div className="activity-details">
-                      <h3>{resource.title}</h3>
-                      <div className="activity-meta">
-                        <span className="activity-type">{resource.type}</span>
-                        <span className="activity-date">{resource.date}</span>
+              {recentActivity.length > 0 ? (
+                <ul className="activity-list">
+                  {recentActivity.map((activity, index) => (
+                    <li key={`${activity.id}-${activity.type}-${index}`} className="activity-item" onClick={() => handleOpenResource(activity.url)}>
+                      <div className="activity-icon">
+                        {activity.type === 'youtube' && <div className="resource-icon youtube"></div>}
+                        {activity.type === 'book' && <div className="resource-icon book"></div>}
                       </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                      <div className="activity-details">
+                        <h3>{activity.title}</h3>
+                        <div className="activity-meta">
+                          <span className="activity-type">
+                            {activity.type === 'youtube' ? 'YouTube Video' : 'Book'}
+                          </span>
+                          <span className="activity-date">{getRelativeTime(activity.timestamp)}</span>
+                        </div>
+                        {activity.description && (
+                          <p className="activity-description">{activity.description}</p>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="empty-activity">
+                  <p>No recent activity</p>
+                  <p className="empty-activity-hint">
+                    Search for YouTube videos or books to see your activity here
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
