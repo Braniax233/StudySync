@@ -1,0 +1,567 @@
+.profile-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.profile-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+}
+
+.profile-info h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.profile-info .username {
+  font-size: 1.125rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.profile-info .join-date {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: #1e293b;
+}
+
+.tab-button.active {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #3b82f6;
+  border-radius: 3px 3px 0 0;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.profile-section {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bio {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 1.5rem;
+}
+
+.interests h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 0.75rem;
+}
+
+.interests-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.interest-tag {
+  padding: 0.5rem 1rem;
+  background-color: #f1f5f9;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.education-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.education-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.education-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.education-item h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.education-item .degree {
+  font-size: 0.875rem;
+  color: #475569;
+  margin-bottom: 0.25rem;
+}
+
+.education-item .year {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.education-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.education-icon::before {
+  content: "\f19d"; /* Font Awesome graduation-cap icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 1.25rem;
+}
+
+.education-content {
+  flex: 1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background-color: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.stat-icon.resources-icon::before {
+  content: "\f02d"; /* Font Awesome book icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.stat-icon.bookmarks-icon::before {
+  content: "\f02e"; /* Font Awesome bookmark icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.stat-icon.hours-icon::before {
+  content: "\f017"; /* Font Awesome clock icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.stat-icon.courses-icon::before {
+  content: "\f19d"; /* Font Awesome graduation-cap icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.activity-feed {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.activity-feed h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.activity-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.activity-icon.bookmark-icon {
+  background-color: #fee2e2;
+}
+
+.activity-icon.bookmark-icon::before {
+  content: "\f02e"; /* Font Awesome bookmark icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.activity-icon.completion-icon {
+  background-color: #d1fae5;
+}
+
+.activity-icon.completion-icon::before {
+  content: "\f00c"; /* Font Awesome check icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.activity-icon.access-icon {
+  background-color: #e0f2fe;
+}
+
+.activity-icon.access-icon::before {
+  content: "\f06e"; /* Font Awesome eye icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-text {
+  font-size: 0.875rem;
+  color: #475569;
+  margin-bottom: 0.25rem;
+}
+
+.resource-name {
+  font-weight: 600;
+  color: #334155;
+}
+
+.activity-date {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.activity-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.activity-action {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: none;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activity-action.view:hover {
+  background-color: #e0f2fe;
+}
+
+.activity-action.remove:hover {
+  background-color: #fee2e2;
+}
+
+.view-icon::before {
+  content: "\f06e"; /* Font Awesome eye icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.875rem;
+}
+
+.remove-icon::before {
+  content: "\f00d"; /* Font Awesome times icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.875rem;
+}
+
+.achievements-section {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.achievements-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.achievement-card {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.achievement-card:hover {
+  transform: translateY(-5px);
+}
+
+.achievement-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: #fef3c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+
+.achievement-icon::before {
+  content: "\f091"; /* Font Awesome trophy icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.achievement-details {
+  flex: 1;
+}
+
+.achievement-details h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.achievement-date {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+}
+
+.achievement-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.achievement-content {
+  flex: 1;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.edit-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f1f5f9;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-profile-btn:hover {
+  background-color: #e2e8f0;
+}
+
+.edit-icon::before {
+  content: "\f044"; /* Font Awesome pencil icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.875rem;
+}
+
+.profile-tab-icon::before {
+  content: "\f007"; /* Font Awesome user icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.5rem;
+}
+
+.activity-tab-icon::before {
+  content: "\f080"; /* Font Awesome chart-bar icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.5rem;
+}
+
+.achievements-tab-icon::before {
+  content: "\f091"; /* Font Awesome trophy icon */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .profile-avatar {
+    margin: 0 auto;
+  }
+  
+  .profile-tabs {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .tab-button {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .profile-name-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .edit-profile-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
