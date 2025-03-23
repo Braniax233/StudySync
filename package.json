@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "axios": "^1.8.4",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "html-pdf-node": "^1.0.8",
+    "puppeteer": "^24.4.0",
+    "react-icons": "^5.5.0"
+  }
+}
