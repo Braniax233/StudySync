@@ -5,7 +5,7 @@
 .studysync-calendar-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   height: 100%;
 }
 
@@ -28,7 +28,7 @@
   border: none;
   border-radius: 8px;
   color: #e0e0e0;
-  padding: 10px;
+  padding: 5px;
 }
 
 /* Calendar navigation */
@@ -82,10 +82,10 @@
 /* Tiles */
 .dark-theme-calendar .react-calendar__tile {
   max-width: 100%;
-  padding: 10px 6px;
+  padding: 6px 4px;
   background: none;
   text-align: center;
-  line-height: 16px;
+  line-height: 14px;
   border-radius: 4px;
   position: relative;
 }
@@ -131,7 +131,7 @@
   flex: 1;
   background-color: #1a1a1a;
   border-radius: 8px;
-  padding: 15px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   min-width: 280px;
@@ -141,7 +141,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .events-title {
@@ -298,6 +298,6 @@
 .no-events {
   color: #a0a0a0;
   text-align: center;
-  padding: 20px 0;
+  padding: 10px 0;
   font-style: italic;
 }

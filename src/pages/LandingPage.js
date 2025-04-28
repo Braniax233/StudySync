@@ -75,7 +75,7 @@ const LandingPage = () => {
                 <li><a href="#home" className="active">Home</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
-                <li><a href="#" onClick={handleLogin}>Login</a></li>
+                <li><button className="nav-link-button" onClick={handleLogin}>Login</button></li>
                 <li className="account-item">
                   <button className="create-account-btn" onClick={handleCreateAccount}>
                     Create Account
@@ -90,13 +90,13 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="hero-section" id="home">
         <div className="container">
-          <h1>Ready to grab <br />your notes</h1>
+          <h1>Find study materials <br />instantly</h1>
           <div className="blue-underline"></div>
           <p className="hero-subtitle">
-            StudySync provides you with all the tools you need. Syncs with resources for better organization.
+            Stop wasting time searching for books and course. StudySyncs uses AI to find the best YouTube Courses, PDFs and physical books-personalized just for you.
           </p>
           <button className="cta-button" onClick={handleCreateAccount}>
-            Start taking notes
+            Start Learning Smarter 
           </button>
         </div>
       </section>
@@ -121,14 +121,14 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="feature-image-right">
-              <img src="/assets/recommendation.jpg" alt="YouTube recommendations" className="feature-img" />
+              <img src="/assets/recommendation.png" alt="YouTube recommendations" className="feature-img" />
             </div>
           </div>
 
           {/* Resource Locator Feature */}
           <div className="feature-item">
             <div className="feature-image-left">
-              <img src="/assets/resource.jpg" alt="Resource locator" className="feature-img" />
+              <img src="/assets/resources.png" alt="Resource locator" className="feature-img" />
             </div>
             <div className="feature-content-right">
               <h3>Resource Locator</h3>

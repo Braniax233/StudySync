@@ -2,67 +2,170 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navigation/Navbar';
 import StudySyncCalendar from '../components/Calendar/Calendar';
-import { bookmarksService } from '../services/dataService';
+import { bookmarkService } from '../services/bookmarkService';
 import { recentActivityService } from '../services/cacheService';
+import RecommendationModel from '../components/RecommendationModel';
+import { populateTestData } from '../services/testData';
 import '../styles/Dashboard.css';
+
+// Create a singleton instance of the recommendation model
+const recommendationModel = new RecommendationModel();
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [bookmarks, setBookmarks] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Function to get content details for a specific type
+  const getContentForType = (type, recentActivity, bookmarks) => {
+    // Combine recent activity and bookmarks, with most recent items first
+    const allContent = [...recentActivity, ...bookmarks]
+      .filter(item => (item.type === 'youtube' && type === 'video') || item.type === type)
+      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    
+    // Return the first match if available
+    return allContent.length > 0 ? allContent[0] : null;
+  };
   
   // Load data from services
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        console.log('Fetching dashboard data...');
+
         // Load bookmarks
-        const loadedBookmarks = await bookmarksService.getBookmarks();
-        if (Array.isArray(loadedBookmarks)) {
-          setBookmarks(loadedBookmarks);
-        } else {
-          console.error('Bookmarks data is not an array:', loadedBookmarks);
-          setBookmarks([]);
-        }
+        const loadedBookmarks = await bookmarkService.getBookmarks();
+        console.log('Loaded bookmarks:', loadedBookmarks);
         
         // Load recent activity from cache
-        const activities = recentActivityService.getActivities(5);
-        setRecentActivity(activities);
+        const activities = recentActivityService.getActivities(10);
+        console.log('Loaded activities:', activities);
+
+        // Transform data for the model
+        const transformData = (activities, bookmarks) => {
+          const transformedActivities = activities.map(activity => ({
+            ...activity,
+            type: activity.type === 'youtube' ? 'video' : activity.type,
+            category: activity.category || 'general',
+            tags: activity.tags || [],
+            timestamp: activity.timestamp || Date.now()
+          }));
+
+          const transformedBookmarks = (bookmarks || []).map(bookmark => ({
+            ...bookmark,
+            type: bookmark.type === 'youtube' ? 'video' : bookmark.type,
+            category: bookmark.category || 'general',
+            tags: bookmark.tags || [],
+            timestamp: new Date(bookmark.dateAdded).getTime() || Date.now()
+          }));
+
+          return {
+            recentActivity: transformedActivities,
+            bookmarks: transformedBookmarks
+          };
+        };
+
+        // If no real data exists, populate with test data
+        if (activities.length === 0 && (!loadedBookmarks || loadedBookmarks.length === 0)) {
+          console.log('No real data found, populating test data...');
+          populateTestData();
+          
+          // Wait for test data to be populated (all timeouts to complete)
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Reload data
+          const testActivities = recentActivityService.getActivities(10);
+          const testBookmarks = await bookmarkService.getBookmarks();
+          
+          console.log('Loaded test activities:', testActivities);
+          console.log('Loaded test bookmarks:', testBookmarks);
+          
+          setBookmarks(testBookmarks || []);
+          setRecentActivity(testActivities);
+          
+          // Transform and train with test data
+          const transformedData = transformData(testActivities, testBookmarks);
+          console.log('Training model with test data:', transformedData);
+
+          // Ensure we have enough data for training
+          if (transformedData.recentActivity.length === 0 && transformedData.bookmarks.length === 0) {
+            console.log('No data available for training');
+            setRecommendations([]);
+            return;
+          }
+
+          // Use the renamed method trainSimpleModel
+          const trained = await recommendationModel.trainSimpleModel(transformedData);
+          if (!trained) {
+            console.warn('Could not train model with test data, using default recommendations');
+          }
+          
+          const testRecommendations = await recommendationModel.getRecommendations(transformedData);
+          console.log('Generated test recommendations:', testRecommendations);
+          setRecommendations(testRecommendations);
+        } else {
+          // Use real data
+          console.log('Using real data for recommendations');
+          setBookmarks(loadedBookmarks || []);
+          setRecentActivity(activities);
+
+          // Transform and train with real data
+          const transformedData = transformData(activities, loadedBookmarks);
+          console.log('Training model with real data:', transformedData);
+
+          // Ensure we have enough data for training
+          if (transformedData.recentActivity.length === 0 && transformedData.bookmarks.length === 0) {
+            console.log('No data available for training');
+            setRecommendations([]);
+            return;
+          }
+
+          // Use the renamed method trainSimpleModel instead of trainModel
+          const trained = await recommendationModel.trainSimpleModel(transformedData);
+          if (!trained) {
+            console.warn('Could not train model with real data, using similarity-based recommendations');
+          }
+          
+          const realRecommendations = await recommendationModel.getRecommendations(transformedData);
+          console.log('Generated real recommendations:', realRecommendations);
+          setRecommendations(realRecommendations);
+        }
+
+        setError(null);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
+        setError(error.message);
         setBookmarks([]);
+        setRecommendations([]);
+        recommendationModel.cleanup(); // Use cleanup instead of disposeModel
+      } finally {
+        setLoading(false);
       }
     };
     
     fetchData();
-    
-    // Sample recommendations data - in a real app, this would come from an API
-    setRecommendations([
-      { 
-        id: 1, 
-        title: 'Python for Data Science', 
-        type: 'YouTube Course',
-        channel: 'Tech Academy',
-        duration: '4h 30m',
-        image: '/assets/recommendation.jpg'
-      },
-      { 
-        id: 2, 
-        title: 'Algorithms and Data Structures', 
-        type: 'Online Textbook',
-        author: 'Dr. Jane Smith',
-        pages: '342 pages',
-        image: '/assets/resource.jpg'
-      },
-      { 
-        id: 3, 
-        title: 'Full Stack Web Development', 
-        type: 'YouTube Course',
-        channel: 'Code Masters',
-        duration: '10h 15m',
-        image: '/assets/recommendation.jpg'
-      }
-    ]);
+
+    // Cleanup function
+    return () => {
+      recommendationModel.cleanup();
+    };
+  }, []);
+
+  // Add effect to refresh recent activity periodically
+  useEffect(() => {
+    // Refresh recent activity every 2 seconds
+    const intervalId = setInterval(() => {
+      const activities = recentActivityService.getActivities(10);
+      setRecentActivity(activities);
+    }, 2000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleNavigate = (path) => {
@@ -73,10 +176,16 @@ const Dashboard = () => {
     window.open(url, '_blank');
   };
   
-  const handleDeleteBookmark = (id) => {
-    if (window.confirm('Are you sure you want to delete this bookmark?')) {
-      bookmarksService.deleteBookmark(id);
-      setBookmarks(bookmarks.filter(bookmark => bookmark.id !== id));
+  const handleDeleteBookmark = async (bookmark) => {
+    try {
+      await bookmarkService.removeBookmark(bookmark.id, bookmark.type);
+      // Update the bookmarks state to remove the deleted bookmark
+      setBookmarks(prevBookmarks => prevBookmarks.filter(b => 
+        !(b.id === bookmark.id && b.type === bookmark.type)
+      ));
+    } catch (error) {
+      console.error('Error deleting bookmark:', error);
+      setError('Failed to delete bookmark');
     }
   };
   
@@ -105,6 +214,106 @@ const Dashboard = () => {
     
     // Fall back to formatted date for older items
     return formatDate(new Date(timestamp));
+  };
+
+  const RecommendationCard = ({ recommendation, recentActivity, bookmarks }) => {
+    const { type, score } = recommendation;
+    const matchingContent = getContentForType(type, recentActivity, bookmarks);
+    const displayScore = Math.round(score * 100);
+    
+    const defaultThumbnails = {
+      video: '/assets/video.jpg',
+      article: '/assets/article.jpg',
+      book: '/assets/book.jpg',
+      course: '/assets/course.jpg',
+      documentation: '/assets/documentation.jpg'
+    };
+
+    const handleClick = () => {
+      if (matchingContent?.url) {
+        window.open(matchingContent.url, '_blank', 'noopener,noreferrer');
+      }
+    };
+    
+    return (
+      <div className="recommendation-card" onClick={handleClick}>
+        {matchingContent ? (
+          <>
+            <div className="recommendation-thumbnail">
+              <img 
+                src={matchingContent.thumbnail || defaultThumbnails[type]} 
+                alt={matchingContent.title}
+                onError={(e) => {
+                  e.target.src = defaultThumbnails[type];
+                }}
+              />
+            </div>
+            <div className="recommendation-content">
+              <h3>{matchingContent.title}</h3>
+              <p className="recommendation-type">{type.charAt(0).toUpperCase() + type.slice(1)}</p>
+              <div className="recommendation-score">
+                <div className="score-bar" style={{ width: `${displayScore}%` }}></div>
+                <span>{displayScore}% Match</span>
+              </div>
+              {matchingContent.description && (
+                <p className="recommendation-description">{matchingContent.description.slice(0, 100)}...</p>
+              )}
+              {matchingContent.tags && matchingContent.tags.length > 0 && (
+                <div className="recommendation-tags">
+                  {matchingContent.tags.map((tag, index) => (
+                    <span key={index} className="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="recommendation-content">
+            <div className="recommendation-thumbnail">
+              <img 
+                src={defaultThumbnails[type]}
+                alt={`New ${type} recommendation`}
+              />
+            </div>
+            <h3>Recommended {type.charAt(0).toUpperCase() + type.slice(1)} Content</h3>
+            <p className="recommendation-description">
+              Based on your interests, we recommend exploring new {type} content.
+            </p>
+            <div className="recommendation-score">
+              <div className="score-bar" style={{ width: `${displayScore}%` }}></div>
+              <span>{displayScore}% Match</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderRecommendations = () => {
+    if (loading) {
+      return <div className="loading">Loading recommendations...</div>;
+    }
+
+    if (error) {
+      return <div className="error">{error}</div>;
+    }
+
+    if (!recommendations || recommendations.length === 0) {
+      return <div className="no-recommendations">No recommendations available yet. Try exploring more content!</div>;
+    }
+
+    return (
+      <div className="recommendations-grid">
+        {recommendations.map((recommendation, index) => (
+          <RecommendationCard 
+            key={index}
+            recommendation={recommendation}
+            recentActivity={recentActivity}
+            bookmarks={bookmarks}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -168,29 +377,10 @@ const Dashboard = () => {
           <div className="dashboard-card recommendations">
             <div className="card-header">
               <h2>Recommended for You</h2>
-              <button className="view-all-button" onClick={() => handleNavigate('/search')}>View All</button>
+              <button className="view-all-button" onClick={() => handleNavigate('/recommendations')}>View All</button>
             </div>
             <div className="card-content">
-              <div className="recommendations-grid">
-                {recommendations.map(item => (
-                  <div key={item.id} className="recommendation-card">
-                    <div className="recommendation-image">
-                      <img src={item.image} alt={item.title} />
-                      {item.duration && (
-                        <span className="duration-badge">{item.duration}</span>
-                      )}
-                    </div>
-                    <div className="recommendation-details">
-                      <h3>{item.title}</h3>
-                      <div className="recommendation-meta">
-                        <span className="recommendation-type">{item.type}</span>
-                        {item.channel && <span className="recommendation-channel">{item.channel}</span>}
-                        {item.author && <span className="recommendation-author">{item.author}</span>}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {renderRecommendations()}
             </div>
           </div>
 
@@ -210,7 +400,10 @@ const Dashboard = () => {
                       </div>
                       <button 
                         className="delete-bookmark-button"
-                        onClick={() => handleDeleteBookmark(bookmark.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteBookmark(bookmark);
+                        }}
                         title="Delete bookmark"
                       >
                         ×

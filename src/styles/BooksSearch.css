@@ -149,14 +149,14 @@
   margin-bottom: 15px;
 }
 
-.book-links {
+.book-actions {
   display: flex;
   gap: 10px;
   margin-top: auto;
 }
 
 .preview-button, .info-button {
-  display: inline-block;
+  flex: 1;
   padding: 8px 16px;
   color: white;
   text-decoration: none;
@@ -164,6 +164,9 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
+  text-align: center;
+  border: none;
+  cursor: pointer;
 }
 
 .preview-button {
@@ -182,4 +185,38 @@
 .info-button:hover {
   background-color: #5a6268;
   transform: translateY(-1px);
+}
+
+.bookmark-button {
+  padding: 8px 16px;
+  background-color: #2a2a2a;
+  color: #a0a0a0;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 100px;
+}
+
+.bookmark-button:hover {
+  background-color: #3a3a3a;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.bookmark-button.bookmarked {
+  background-color: rgba(65, 105, 225, 0.2);
+  color: #4169e1;
+  border-color: #4169e1;
+}
+
+.bookmark-button.bookmarked:hover {
+  background-color: rgba(65, 105, 225, 0.3);
+  color: #4169e1;
 }

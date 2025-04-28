@@ -48,7 +48,7 @@ const NotesPage = () => {
     };
     
     fetchNotes();
-  }, []);
+  }, [activeNote]);
 
   const createNewNote = async () => {
     try {
@@ -173,6 +173,43 @@ const NotesPage = () => {
     }
   };
 
+  const downloadNote = (note) => {
+    try {
+      // Create a formatted version of the note content
+      // Include the title, content, and tags
+      let formattedContent = `# ${note.title}\n\n`;
+      formattedContent += `${note.content}\n\n`;
+      
+      if (note.tags && note.tags.length > 0) {
+        formattedContent += `Tags: ${note.tags.join(', ')}\n`;
+      }
+      
+      formattedContent += `\nLast Modified: ${new Date(note.dateModified).toLocaleString()}`;
+      
+      // Create a Blob with the content
+      const blob = new Blob([formattedContent], { type: 'text/plain' });
+      
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${note.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+      
+      // Append to the document, click, and then remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Release the URL
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading note:', error);
+      setError('Failed to download note. Please try again later.');
+    }
+  };
+
   const filteredNotes = notes.filter(note => {
     // Apply search filter
     const matchesSearch = note.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -259,6 +296,7 @@ const NotesPage = () => {
                 note={activeNote} 
                 onUpdateNote={updateNote}
                 onToggleShare={() => toggleShareNote(activeNote._id)}
+                onDownloadNote={downloadNote}
               />
             ) : (
               <div className="empty-editor">

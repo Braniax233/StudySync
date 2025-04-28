@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "studysync/studysync/server/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "studysync/studysync/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build",
+        "buildCommand": "cd studysync/studysync && npm install && npm run build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "studysync/studysync/server/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "studysync/studysync/build/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+} 

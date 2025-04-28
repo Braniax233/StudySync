@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { profileAPI } from '../services/apiService';
@@ -12,12 +12,12 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   
-  const defaultStats = {
+  const defaultStats = useMemo(() => ({
     resourcesAccessed: 0,
     bookmarks: 0,
     studyHours: 0,
     completedCourses: 0
-  };
+  }), []);
   
   const [userData, setUserData] = useState({
     name: '',
@@ -69,7 +69,7 @@ const ProfilePage = () => {
     if (currentUser) {
       fetchUserData();
     }
-  }, [currentUser]);
+  }, [currentUser, defaultStats]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);

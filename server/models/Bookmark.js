@@ -27,9 +27,11 @@ const BookmarkSchema = new mongoose.Schema({
     required: true
   },
   dateAdded: {
+
     type: Date,
     default: Date.now
   }
 });
 
 module.exports = mongoose.model('Bookmark', BookmarkSchema);
+

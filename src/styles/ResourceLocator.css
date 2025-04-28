@@ -36,76 +36,236 @@
   display: flex;
   max-width: 700px;
   margin: 0 auto;
+  gap: 10px;
 }
 
-.search-input {
+.locator-search-form .search-input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.25rem 0 0 0.25rem;
+  padding: 12px 16px;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #2a2a2a;
   color: white;
-  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
-.search-input:focus {
+.locator-search-form .search-input::placeholder {
+  color: #888;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.locator-search-form .search-input:focus {
   outline: none;
   border-color: #4169e1;
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.3);
 }
 
-.search-button {
+.locator-search-form .search-button {
+  padding: 12px 24px;
+  background-color: #4169e1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #4169e1;
-  border: none;
-  border-radius: 0 0.25rem 0.25rem 0;
-  color: white;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
+  gap: 8px;
 }
 
-.search-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+.locator-search-form .search-button:hover:not(:disabled) {
+  background-color: #3158d3;
+  transform: translateY(-1px);
 }
 
-/* Popular Books Section */
-.popular-books-section {
-  margin-top: 4rem;
+.locator-search-form .search-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.popular-books-section h2 {
+.error-message {
+  color: #ff4444;
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: rgba(255, 68, 68, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Nearby Places Section */
+.nearby-places-section {
+  margin: 3rem 0;
+  text-align: left;
+}
+
+.nearby-places-section h2 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
   color: white;
 }
 
-.popular-books-list {
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.place-card {
+  background-color: #1a1a1a;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.place-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.place-icon {
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(65, 105, 225, 0.1);
+  border-radius: 0.5rem;
+}
+
+.place-info {
+  flex: 1;
+  text-align: left;
+}
+
+.place-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  color: white;
+}
+
+.place-type {
+  font-size: 0.9rem;
+  color: #4169e1;
+  margin: 0 0 0.5rem;
+}
+
+.place-address {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  margin: 0 0 0.75rem;
+}
+
+.place-details {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #888;
+  align-items: center;
+}
+
+.distance {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.maps-button {
+  padding: 0.25rem 0.75rem;
+  background-color: #4169e1;
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.maps-button:hover {
+  background-color: #3158d3;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.open-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.open-status.open {
+  background-color: rgba(0, 255, 0, 0.1);
+  color: #00ff00;
+}
+
+.open-status.closed {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff0000;
+}
+
+/* Popular Cities Section */
+.popular-cities-section {
+  margin-top: 4rem;
+}
+
+.popular-cities-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.popular-cities-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
 }
 
-.popular-book-item {
+.popular-city-item {
   background-color: #1a1a1a;
   border-radius: 2rem;
   padding: 0.5rem 1.25rem;
   font-size: 0.9rem;
   color: white;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  border: 1px solid #333;
 }
 
-.popular-book-item:hover {
-  background-color: #252525;
+.popular-city-item:hover {
+  background-color: #2a2a2a;
+  border-color: #4169e1;
+  transform: translateY(-2px);
+}
+
+.popular-city-item:active {
+  transform: translateY(0);
+  background-color: #4169e1;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .locator-content {
+    padding: 1rem;
+  }
+
+  .locator-hero h1 {
+    font-size: 2rem;
+  }
 }

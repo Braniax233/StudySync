@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from '../utils/axiosConfig';
 import { booksSearchCache } from '../services/cacheService';
+import { bookmarkService } from '../services/bookmarkService';
 import '../styles/BooksSearch.css';
 
 const BooksSearch = () => {
@@ -64,6 +65,38 @@ const BooksSearch = () => {
     }
   };
 
+  const handleBookmark = (book) => {
+    const bookmark = {
+      id: book.id,
+      type: 'book',
+      title: book.title,
+      url: book.infoLink || book.previewLink || '',
+      thumbnail: book.thumbnail || '',
+      description: book.authors ? `By ${book.authors.join(', ')}` : '',
+      authors: book.authors,
+      publishedDate: book.publishedDate,
+      pageCount: book.pageCount
+    };
+
+    const added = bookmarkService.addBookmark(bookmark);
+    if (added) {
+      // Update the book's bookmark status in the UI
+      setBooks(books.map(b => 
+        b.id === book.id ? { ...b, isBookmarked: true } : b
+      ));
+    }
+  };
+
+  const handleUnbookmark = (book) => {
+    const success = bookmarkService.removeBookmark(book.id, 'book');
+    if (success) {
+      // Update the book's bookmark status in the UI
+      setBooks(books.map(b => 
+        b.id === book.id ? { ...b, isBookmarked: false } : b
+      ));
+    }
+  };
+
   return (
     <div className="books-search">
       <form onSubmit={handleSearch} className="search-form">
@@ -120,7 +153,7 @@ const BooksSearch = () => {
                   <span> • Rating: {book.averageRating}/5 ({book.ratingsCount} reviews)</span>
                 )}
               </div>
-              <div className="book-links">
+              <div className="book-actions">
                 {book.previewLink && (
                   <button
                     onClick={() => handleBookClick(book, 'preview')}
@@ -137,6 +170,12 @@ const BooksSearch = () => {
                     More Info
                   </button>
                 )}
+                <button
+                  onClick={() => book.isBookmarked ? handleUnbookmark(book) : handleBookmark(book)}
+                  className={`bookmark-button ${book.isBookmarked ? 'bookmarked' : ''}`}
+                >
+                  {book.isBookmarked ? 'Bookmarked' : 'Bookmark'}
+                </button>
               </div>
             </div>
           </div>

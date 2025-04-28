@@ -5,6 +5,7 @@ import './Navbar.css';
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ const Navbar = () => {
 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const isActive = (path) => {
@@ -46,6 +51,31 @@ const Navbar = () => {
     return nameParts[0][0].toUpperCase();
   };
 
+  const renderNavLinks = () => (
+    <div className="navbar-links">
+      <Link to="/dashboard" className={`navbar-link ${isActive('/dashboard') ? 'active' : ''}`}>
+        <i className="icon dashboard-icon"></i>
+        <span>Dashboard</span>
+      </Link>
+      <Link to="/search" className={`navbar-link ${isActive('/search') ? 'active' : ''}`}>
+        <i className="icon search-icon"></i>
+        <span>Find Resources</span>
+      </Link>
+      <Link to="/locate" className={`navbar-link ${isActive('/locate') ? 'active' : ''}`}>
+        <i className="icon locate-icon"></i>
+        <span>Resource Locator</span>
+      </Link>
+      <Link to="/bookmarks" className={`navbar-link ${isActive('/bookmarks') ? 'active' : ''}`}>
+        <i className="icon bookmark-icon"></i>
+        <span>Bookmarks</span>
+      </Link>
+      <Link to="/notes" className={`navbar-link ${isActive('/notes') ? 'active' : ''}`}>
+        <i className="icon notes-icon"></i>
+        <span>Notes</span>
+      </Link>
+    </div>
+  );
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -57,28 +87,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-center">
-          <div className="navbar-links">
-            <Link to="/dashboard" className={`navbar-link ${isActive('/dashboard') ? 'active' : ''}`}>
-              <i className="icon dashboard-icon"></i>
-              <span>Dashboard</span>
-            </Link>
-            <Link to="/search" className={`navbar-link ${isActive('/search') ? 'active' : ''}`}>
-              <i className="icon search-icon"></i>
-              <span>Find Resources</span>
-            </Link>
-            <Link to="/locate" className={`navbar-link ${isActive('/locate') ? 'active' : ''}`}>
-              <i className="icon locate-icon"></i>
-              <span>Resource Locator</span>
-            </Link>
-            <Link to="/bookmarks" className={`navbar-link ${isActive('/bookmarks') ? 'active' : ''}`}>
-              <i className="icon bookmark-icon"></i>
-              <span>Bookmarks</span>
-            </Link>
-            <Link to="/notes" className={`navbar-link ${isActive('/notes') ? 'active' : ''}`}>
-              <i className="icon notes-icon"></i>
-              <span>Notes</span>
-            </Link>
-          </div>
+          {renderNavLinks()}
         </div>
 
         <div className="navbar-right">
@@ -114,19 +123,6 @@ const Navbar = () => {
                 </div>
                 <ul className="profile-menu">
                   <li>
-                    <Link to="/profile" onClick={() => setIsProfileMenuOpen(false)}>
-                      <i className="icon profile-icon"></i>
-                      <span>Profile</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/settings" onClick={() => setIsProfileMenuOpen(false)}>
-                      <i className="icon settings-icon"></i>
-                      <span>Settings</span>
-                    </Link>
-                  </li>
-                  <li className="divider"></li>
-                  <li>
                     <button onClick={handleLogout} className="logout-link">
                       <i className="icon logout-icon"></i>
                       <span>Log out</span>
@@ -136,8 +132,48 @@ const Navbar = () => {
               </div>
             )}
           </div>
+
+          <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+            <i className={`icon ${isMobileMenuOpen ? 'close-icon' : 'menu-icon'}`}></i>
+          </button>
         </div>
       </div>
+
+      {isMobileMenuOpen && (
+        <div className="mobile-menu">
+          {renderNavLinks()}
+          <form className="search-bar" onSubmit={handleSearch}>
+            <input 
+              type="text" 
+              placeholder="Quick search..." 
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <button type="submit" className="search-button">
+              <i className="icon search-icon-small"></i>
+            </button>
+          </form>
+          <div className="profile-dropdown">
+            <div className="profile-header">
+              <div className="profile-avatar large">
+                <span>{getUserInitials()}</span>
+              </div>
+              <div className="profile-info">
+                <h4>{currentUser?.name || 'User'}</h4>
+                <p>{currentUser?.email || 'user@example.com'}</p>
+              </div>
+            </div>
+            <ul className="profile-menu">
+              <li>
+                <button onClick={handleLogout} className="logout-link">
+                  <i className="icon logout-icon"></i>
+                  <span>Log out</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Notes.css';
 
-const NoteEditor = ({ note, onUpdateNote, onToggleShare }) => {
+const NoteEditor = ({ note, onUpdateNote, onToggleShare, onDownloadNote }) => {
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content);
   const [tags, setTags] = useState(note.tags.join(', '));
@@ -71,10 +71,16 @@ const NoteEditor = ({ note, onUpdateNote, onToggleShare }) => {
               </button>
             </>
           ) : (
-            <button className="editor-button edit-button" onClick={() => setIsEditing(true)}>
-              <i className="icon edit-icon"></i>
-              Edit
-            </button>
+            <>
+              <button className="editor-button edit-button" onClick={() => setIsEditing(true)}>
+                <i className="icon edit-icon"></i>
+                Edit
+              </button>
+              <button className="editor-button download-button" onClick={() => onDownloadNote(note)}>
+                <i className="icon download-icon"></i>
+                Download
+              </button>
+            </>
           )}
           
           <button 

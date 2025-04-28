@@ -349,11 +349,15 @@ const getAuthToken = () => {
   return localStorage.getItem('studysync_token');
 }
 
-export default {
-  auth: authAPI,
-  profile: profileAPI,
-  notes: notesAPI,
-  events: eventsAPI,
-  resources: resourcesAPI,
-  bookmarks: bookmarksAPI,
+// Create an api service object
+const apiService = {
+  api,
+  authAPI,
+  profileAPI,
+  notesAPI,
+  eventsAPI,
+  resourcesAPI,
+  bookmarksAPI
 };
+
+export default apiService;

@@ -13,6 +13,7 @@ import NotesPage from "./pages/NotesPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import RecentActivityPage from "./pages/RecentActivityPage";
+import Recommendations from "./pages/Recommendations";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import Footer from "./components/Footer";
 import "./styles/App.css"; 
@@ -55,6 +56,13 @@ function App() {
               <ProtectedRoute>
                 <div className="content-container">
                   <BookmarksPage />
+                </div>
+              </ProtectedRoute>
+            } />
+            <Route path="/recommendations" element={
+              <ProtectedRoute>
+                <div className="content-container">
+                  <Recommendations />
                 </div>
               </ProtectedRoute>
             } />
