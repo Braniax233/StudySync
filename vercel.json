@@ -2,29 +2,38 @@
   "version": 2,
   "builds": [
     {
-      "src": "studysync/studysync/server/index.js",
+      "src": "server/api.js",
       "use": "@vercel/node"
     },
     {
-      "src": "studysync/studysync/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "build",
-        "buildCommand": "cd studysync/studysync && npm install && npm run build"
+        "buildCommand": "npm install && npm run build"
       }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "studysync/studysync/server/index.js"
+      "dest": "server/api.js"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "studysync/studysync/build/$1"
+      "dest": "build/$1"
     }
   ],
   "env": {
     "NODE_ENV": "production"
+  },
+  "functions": {
+    "server/api.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
   }
-} 
+}
