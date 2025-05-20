@@ -19,9 +19,15 @@ const app = express();
 
 // Configure CORS
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://studysync.vercel.app',
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
 // Middleware

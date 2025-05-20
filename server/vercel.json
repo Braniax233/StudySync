@@ -2,17 +2,23 @@
   "version": 2,
   "builds": [
     {
-      "src": "api.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/api.js"
+      "dest": "/index.js"
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "MONGODB_URI": "@mongodb_uri",
+    "JWT_SECRET": "@jwt_secret",
+    "GOOGLE_BOOKS_API_KEY": "@google_books_api_key",
+    "YOUTUBE_API_KEY": "@youtube_api_key",
+    "GOOGLE_PLACES_API_KEY": "@google_places_api_key",
+    "FRONTEND_URL": "@frontend_url"
   }
 }
