@@ -3,18 +3,10 @@
  * Handles all HTTP requests to the backend API
  */
 
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 
-// Base URL for API
-const API_BASE_URL = 'http://localhost:5000/api';
-
-// Create axios instance with default config
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// Use the configured axios instance
+const api = axiosInstance;
 
 // Add request interceptor to add auth token to requests
 api.interceptors.request.use(

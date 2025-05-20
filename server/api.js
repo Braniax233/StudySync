@@ -5,6 +5,9 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
+// Connect to MongoDB
+connectDB().catch(err => console.error('MongoDB connection error:', err));
+
 // Route imports
 const userRoutes = require('./routes/userRoutes');
 const noteRoutes = require('./routes/noteRoutes');
@@ -48,6 +51,10 @@ app.use('/api/resources', resourceRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/youtube', youtubeRoutes);
 app.use('/api/books', googleBooksRoutes);
+app.use('/api/places', placesRoutes);
+
+// Export the Express API
+module.exports = app;
 app.use('/api/places', placesRoutes);
 
 // Error handling middleware
